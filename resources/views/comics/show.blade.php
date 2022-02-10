@@ -10,5 +10,6 @@ Scheda Comics
     <img class="my-4" src="{{$comics->image}}" alt="{{$comics->title}}">
     <p>{{$comics->description}}</p>
     <h4>{{$comics->price}} &euro;</h4>
+    <a href="{{route("comics.index")}}"><button type="button" class="btn btn-dark">Return</button></a>
 </div>
 @endsection
