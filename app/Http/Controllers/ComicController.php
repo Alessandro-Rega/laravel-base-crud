@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Comics;
+use Illuminate\Auth\Events\Validated;
+use Illuminate\Validation\Rule;
 
 class ComicController extends Controller
 {
@@ -39,19 +41,30 @@ class ComicController extends Controller
     {
         $form = $request->all();
 
-        $newComic = new Comics();
-        $newComic->title = $form["title"];
-        $newComic->description = $form["description"];
-        $newComic->type = $form["type"];
-        $newComic->price = $form["price"];
-        $newComic->series = $form["series"];
-        if(!empty($form["image"])){
-            $newComic->image = $form["image"];
-        }
-        else {
-            $newComic->image = "https://www.greenlink.it/wp-content/themes/consultix/images/no-image-found-360x260.png";
-        }
-        $newComic->save();
+        $request->validate([
+            "title"=> "required|string|max:100",
+            "description"=> "string|required",
+            "image"=> "url|nullable",
+            "price"=> "required|integer|min:0|max:50",
+            "series"=> "required|string|max:50",
+            "type"=> "required|string|max:50",
+        ]);
+
+        $newComic = Comics::create($form);
+
+        // $newComic = new Comics();
+        // $newComic->title = $form["title"];
+        // $newComic->description = $form["description"];
+        // $newComic->type = $form["type"];
+        // $newComic->price = $form["price"];
+        // $newComic->series = $form["series"];
+        // if(!empty($form["image"])){
+        //     $newComic->image = $form["image"];
+        // }
+        // else {
+        //     $newComic->image = "https://www.greenlink.it/wp-content/themes/consultix/images/no-image-found-360x260.png";
+        // }
+        // $newComic->save();
 
         return redirect()->route("comics.show", $newComic->id);
     }
